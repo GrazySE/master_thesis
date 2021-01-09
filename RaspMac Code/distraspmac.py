@@ -5,7 +5,7 @@
 #from imutils import build_montages
 import datetime
 import numpy as np
-from imagezmq import imagezmq
+import imagezmq
 import argparse
 import imutils
 import cv2
@@ -21,6 +21,7 @@ import os
 from time import sleep
 
 
+imageHub = imagezmq.ImageHub()
 
 
 protopath = "MobileNetSSD_deploy.prototxt"
@@ -105,7 +106,8 @@ while True:
  
     now=datetime.datetime.now()
 
-    ret,frame = cap.read()
+    (rpiName, frame) = imageHub.recv_image()
+    imageHub.send_reply(b'OK')    
     frame = imutils.resize(frame, width=320)
     total_frames = total_frames + 1
     (h, w) = frame.shape[:2]
